@@ -1,0 +1,85 @@
+﻿@page "/EditUser/{Id}"
+@using BlazorAppUserPortal.Data
+@inject UserService userService
+@inject NavigationManager NavigationManager
+
+<h1>Edit User</h1>
+<hr />
+
+<form>
+    <!-- User details form fields -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <!-- User ID input (read-only) -->
+                <input form="Name" class="form-control" @bind="@obj.Id" />
+            </div>
+            <div class="form-group">
+            <label for="FirstName" class="control-label"> First Name</label>
+                <input for="FirstName" class="form-control"  @bind="@obj.FirstName" />
+        </div>
+            <div class="form-group">
+                <label for="MiddleName" class="control-label"> Middle Name</label>
+                <input for="MiddleName" class="form-control" @bind="@obj.MiddleName" />
+            </div>
+             <div class="form-group">
+                <label for="LastName" class="control-label"> Last Name</label>
+                <input for="LastName" class="form-control" @bind="@obj.LastName" />
+            </div>
+
+            <div class="form-group">
+                <label for="Gender" class="control-label">Gender</label>
+                <select @bind="@obj.Gender" class="form-control">
+                    <option value="">-Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Occupation" class="control-label">Occupation</label>
+                <input form="Occupation" class="form-control" @bind="@obj.Occupation" />
+            </div>
+            <div class="form-group">
+                <label for="City" class="control-label">City</label>
+                <input form="City" class="form-control" @bind="@obj.City" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@UpdateUser" value="Update" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+
+    // Parameter for receiving the user ID from the route
+    [Parameter]
+    public string Id { get; set; }
+
+    // User object for storing user details
+    User obj = new User();
+    protected override async Task OnInitializedAsync()
+    {
+        // OnInitializedAsync method to fetch user details based on the provided ID
+        obj = await Task.Run(() => userService.GetUserById(Convert.ToInt32(Id)));
+    }
+    protected async void UpdateUser()
+    {
+        // Call userService to update user details
+        await userService.UpdateUser(obj);
+
+        // Then navigate to the "UsersList" page after updating user information
+        NavigationManager.NavigateTo("UsersList");
+    }
+    void Cancel()
+    {
+        //Back to the "UsersList" page without saving changes
+        NavigationManager.NavigateTo("UsersList");
+    }
+}

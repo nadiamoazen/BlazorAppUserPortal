@@ -1,0 +1,87 @@
+﻿@page "/UsersList"
+@using BlazorAppUserPortal.Data
+@inject UserService userService
+
+
+<h1> User Panel</h1>
+
+<NavLink class="nav-link" href="AddUser">
+    <span class="oi oi-plus" aria-hidden="true"> Add New User/Registration Form</span>
+</NavLink>
+
+
+
+@if (EmpObj is null)
+{
+    // Conditional rendering: If EmpObj (list of users) is null,
+    // display an empty paragraph.
+
+    <p><em>  </em></p>
+}
+
+
+
+else
+{
+    // Conditional rendering: If EmpObj (list of users) is null,
+    // display an empty paragraph.
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    User ID
+                </th>
+
+                <th>
+                    FirstName
+                </th>
+
+                <th>
+                    MiddleName
+                </th>
+
+                <th>
+                    LastName
+                </th>
+                <th>
+                    Occupation
+                </th>
+              <th>Operations</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in EmpObj)
+            {
+            <tr>
+                <td>@emp.Id</td>
+                <td>@emp.FirstName</td>
+                <td>@emp.MiddleName</td>
+                <td>@emp.LastName</td>
+                <td>@emp.Occupation</td>
+                <td>
+                    <a class="nav-link" href="EditUser/@emp.Id">
+                        <span class="oi oi-pencil" aria-hidden="true">Edit</span>
+                    </a>
+                    <a class="nav-link" href="Delete/@emp.Id">
+                        <span class="oi oi-trash" aria-hidden="true">Delete</span>
+                    </a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    
+    //Declare a list to store user data
+
+    List<User> EmpObj;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Use userService to asynchronously fetch all users
+        EmpObj = await Task.Run(() => userService.GetAllUsers());
+    }
+
+}

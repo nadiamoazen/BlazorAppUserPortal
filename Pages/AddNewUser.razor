@@ -1,0 +1,84 @@
+﻿@page "/AddUser"
+@using BlazorAppUserPortal.Data
+@inject UserService userService
+@inject NavigationManager NavigationManager
+
+<h1>New User Registration Form </h1>
+<h6>Please fill out the fields</h6>
+<hr/>
+
+<form>
+    <!-- User details form fields -->
+    <div class="row">
+        <div class="col-md-8">
+
+            <div class="form-group">
+                <label for="FirstName" class="control-label"> First Name</label>
+                <input for="FirstName" class="form-control" @bind="@obj.FirstName" />
+            </div>
+
+            <div class="form-group">
+                <label for="MiddleName" class="control-label"> Middle Name</label>
+                <input for="MiddleName" class="form-control" @bind="@obj.MiddleName" />
+            </div>
+
+            <div class="form-group">
+                <label for="LastName" class="control-label"> Last Name</label>
+                <input for="LastName" class="form-control" @bind="@obj.LastName" />
+            </div>
+
+            <div class="form-group">
+                <label for="Gender" class="control-label"> Gender</label>
+                <select @bind="@obj.Gender" class="form-control">
+                    <option value="">-Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="City" class="control-label"> City</label>
+                <input for="City" class="form-control" @bind="@obj.City" />
+            </div>
+
+            <div class="form-group">
+                <label for="Designation" class="control-label"> Occupation</label>
+                <input for="Designation" class="form-control" @bind="@obj.Occupation" />
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <hr/>
+                <input type="button" class="btn btn-primary" @onclick="@CreateUser" value="Save" />
+                <input type="button" class="btn btn-danger" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+
+    // User object for form data
+    User obj = new User();
+
+    // Method to create a new user
+    protected async void CreateUser()
+    {
+        // Call userService to insert the new user
+        await userService.InsertUser(obj);
+        // Navigate to the "UsersList" page after user creation
+        NavigationManager.NavigateTo("usersList");
+
+    }
+
+    // Method to cancel and navigate back to the "UsersList" page
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("UsersList");
+    }
+
+}
